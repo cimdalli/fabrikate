@@ -181,8 +181,16 @@ func (hg *HelmGenerator) Generate(component *core.Component) (manifest string, e
 	if err != nil {
 		return "", err
 	}
-	logger.Info(emoji.Sprintf(":memo: Running `helm template` on template '%s'", chartPath))
-	output, err := exec.Command("helm", "template", component.Name, chartPath, "--values", absOverriddenPath, "--namespace", namespace).CombinedOutput()
+	args := []string{"--values", absOverriddenPath, "--namespace", namespace}
+
+	if component.Args != nil {
+		for key, val := range component.Args {
+			args = append(args, fmt.Sprintf("--%s", key), val)
+		}
+	}
+
+	logger.Info(emoji.Sprintf(":memo: Running `helm template` on template '%s' with params '%s'", chartPath, strings.Join(args, " ")))
+	output, err := exec.Command("helm", append([]string{"template", component.Name, chartPath}, args...)...).CombinedOutput()
 	if err != nil {
 		logger.Error(fmt.Sprintf("helm template failed with:\n%s: %s", err, output))
 		return "", err

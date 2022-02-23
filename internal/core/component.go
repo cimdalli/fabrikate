@@ -32,6 +32,7 @@ type Component struct {
 	Path          string              `yaml:"path,omitempty" json:"path,omitempty"`
 	Version       string              `yaml:"version,omitempty" json:"version,omitempty"`
 	Branch        string              `yaml:"branch,omitempty" json:"branch,omitempty"`
+	Args          map[string]string   `yaml:"args,omitempty" json:"args,omitempty"`
 
 	Repositories  map[string]string `yaml:"repositories,omitempty" json:"repositories,omitempty"`
 	Subcomponents []Component       `yaml:"subcomponents,omitempty" json:"subcomponents,omitempty"`
